@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Room.io</h1>
+
+  <p>Welcome to <em>Room.io</em> a new way to find roommates.</p>
+
+<h2>Dynamic content</h2>
+
+  <p>The following questions are available to answer.</p>
+  <ul>
+    <li><strong>Questions</strong> {{ num_questions }}</li>
+  </ul>
+
+{% endblock %}
