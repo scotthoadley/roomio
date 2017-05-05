@@ -1,13 +1,15 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-Test: {{ form.question }}
+<H2>Question: {{ form.question }}</H2>
+
 <form action="" method="post">
     {% csrf_token %}
-    <table>
-    {{ form.as_table }}
-    </table>
+  <input type="radio" name="question_option_1" value="{{ form.question.question_option_1 }}"> {{ form.question.question_option_1 }}<br>
+  <input type="radio" name="question_option_1" value="{{ form.question.question_option_2 }}"> {{ form.question.question_option_2 }}<br>
+  <input type="radio" name="question_option_1" value="{{ form.question.question_option_3 }}"> {{ form.question.question_option_3 }}<br>
+    <input type="radio" name="question_option_1" value="{{ form.question.question_option_4 }}"> {{ form.question.question_option_4 }}<br>
     <input type="submit" value="Submit" />
-    
+
 </form>
 {% endblock %}

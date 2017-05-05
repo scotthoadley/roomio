@@ -4,6 +4,9 @@ from .models import QuestionInstance, Answers
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.db.models.query import QuerySet
+from django.views.generic.edit import FormView
+from .forms import AnswerForm
 
 def index(request):
     """
@@ -44,11 +47,22 @@ class UserAnswersListView(LoginRequiredMixin, generic.ListView):
     #def get_queryset(self):
         #return Answers.objects.filter(created_by=self.request.user_id)
 
-class AnswersCreate(CreateView):
+# class AnswerView(generic.FormView):
+#     template_name = 'answers_form.html'
+#     form_class = AnswerForm
+#     success_url = reverse_lazy('myanswers')
+#
+#     def form_valid(self, form):
+#         #form.instance.created_by = self.request.user
+#         answer=form.save(commit=False)
+#         answer.
+#         return super(AnswerView, self).form_valid(form)
+
+class AnswerView(CreateView):
     model = Answers
     fields = ['question', 'answer_option', 'answer_weight']
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        return super(AnswersCreate, self).form_valid(form)
+        return super(AnswerView, self).form_valid(form)
         #success_url = reverse_lazy('my-answers')

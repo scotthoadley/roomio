@@ -17,10 +17,10 @@ urlpatterns = [
     url(r'^question/(?P<pk>\d+)$', views.QuestionDetailView.as_view(), name='question'),
 ]
 urlpatterns += [
-    url(r'^myanswers/$', views.UserAnswersListView.as_view(), name='my-answers'),
+    url(r'^myanswers/$', views.UserAnswersListView.as_view(), name='myanswers'),
 ]
 urlpatterns += [
-    url(r'^answers/create/$', views.AnswersCreate.as_view(), name='answers_create'),
+    url(r'^create/answers/$', views.AnswerView.as_view(), name='answer_view'),
     #url(r'^answers/(?P<pk>\d+)/update/$', views.AuthorUpdate.as_view(), name='author_update'),
     #url(r'^answers/(?P<pk>\d+)/delete/$', views.AuthorDelete.as_view(), name='author_delete'),
 ]
