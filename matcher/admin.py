@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import QuestionInstance
+from .models import QuestionInstance, Answers
 
 # Register your models here.
 #admin.site.register(QuestionInstance)
@@ -11,11 +11,24 @@ from .models import QuestionInstance
 
 @admin.register(QuestionInstance)
 class QuestionInstanceAdmin(admin.ModelAdmin):
-    list_display = ('question_id', 'question_text', 'vetted', 'question_answers')
+    list_display = ('question_id', 'question_text', 'vetted', 'question_option_1', 'question_option_2', 'question_option_3', 'question_option_4')
     list_filter = ('question_id', 'question_text', 'vetted')
+   # list_editable = ('question_id', 'question_text', 'vetted')
+    fieldsets = (
+        (None, {
+            'fields': ('question_text', 'vetted',  'question_option_1', 'question_option_2', 'question_option_3', 'question_option_4')
+        }),
+    )
+
+@admin.register(Answers)
+class AnswersAdmin(admin.ModelAdmin):
+    list_display = ('created_by', 'question', 'answer_weight', 'answer_option')
+    list_filter = ('created_by', 'question', 'answer_weight', 'answer_option')
+    #list_editable = ('user', 'question', 'answer_weight')
+
 
     fieldsets = (
         (None, {
-            'fields': ('question_text', 'vetted')
+            'fields': ('created_by', 'question', 'answer_weight', 'answer_option')
         }),
     )

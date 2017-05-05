@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>My Answers</h1>
+
+    {% if answers_list %}
+    <ul>
+
+    {% for user_answer in answers_list.all %}
+        Question: {{ user_answer.question.question_text }}
+        <br/>
+        Answer: {{ user_answer.answer_option }}
+        <br/>
+        Answer Weight: {{ user_answer.answer_weight }}
+        <p/>
+    {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>You haven't answered any questions.</p>
+    {% endif %}
+{% endblock %}

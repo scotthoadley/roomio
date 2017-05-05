@@ -8,7 +8,7 @@
 
       {% for question in questioninstance_list %}
       <li>
-        <a href="{{ question.get_absolute_url }}">{{ question.question_text }}</a> ({{question.vetted}})
+        <a href="../question/{{question.question_id }}">{{ question.question_text }}</a> ({{question.vetted}})
       </li>
       {% endfor %}
 

@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from . import views
 #matcher/questions
@@ -14,5 +14,13 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^questions/$', views.QuestionListView.as_view(), name = "questions" ),
-    url(r'^question/(?P<pk>\d+)$', views.QuestionDetailView.as_view(), name='question-detail'),
+    url(r'^question/(?P<pk>\d+)$', views.QuestionDetailView.as_view(), name='question'),
+]
+urlpatterns += [
+    url(r'^myanswers/$', views.UserAnswersListView.as_view(), name='my-answers'),
+]
+urlpatterns += [
+    url(r'^answers/create/$', views.AnswersCreate.as_view(), name='answers_create'),
+    #url(r'^answers/(?P<pk>\d+)/update/$', views.AuthorUpdate.as_view(), name='author_update'),
+    #url(r'^answers/(?P<pk>\d+)/delete/$', views.AuthorDelete.as_view(), name='author_delete'),
 ]

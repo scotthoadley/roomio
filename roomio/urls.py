@@ -24,3 +24,9 @@ urlpatterns = [
     url(r'^matcher/', include('matcher.urls')),
     url(r'^$', RedirectView.as_view(url='/matcher/', permanent=True)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+#Add Django site authentication urls (for login, logout, password management)
+urlpatterns += [
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+]
