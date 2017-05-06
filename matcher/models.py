@@ -22,19 +22,19 @@ from django.db.models.signals import post_save
 class QuestionInstance(models.Model):
     #id = models.IntegerField(primary_key=True)
     #question = models.ForeignKey('Question', on_delete=models.SET_NULL, null=True)
-    question_id = models.AutoField(primary_key=True)
+    #question_id = models.AutoField(primary_key=True)
     question_text = models.CharField(max_length=200,
                                      help_text="Enter a question that thrills you about a potential roomate!")
     vetted = models.BooleanField(default = False)
 
     question_option_1 = models.CharField(max_length=200, default="Yes")
     question_option_2 = models.CharField(max_length=200, default="No")
-    question_option_3 = models.CharField(max_length=200, default="")
-    question_option_4 = models.CharField(max_length=200, default="")
 
-    #set ordering as random = ?
-    class Meta:
-        ordering = ['?']
+   # question_option_would_1 = models.CharField(max_length=200, default="Yes")
+    #question_option_would_2 = models.CharField(max_length=200, default="No")
+
+    def get_random_question(self):
+        return QuestionInstance.objects.all().order_by('?')[:1].get()
 
     def __str__(self):
         return '%s' % (self.question_text)
@@ -42,9 +42,15 @@ class QuestionInstance(models.Model):
     def get_absolute_url(self):
         return "matcher/%i/" % self.question_id
 
+class UserAnswers(models.Model):
+    user_id = models.IntegerField(default=0)
+    question_id = models.IntegerField(default=0)
+    answer_weight = models.IntegerField(default=0)
+    question_answer = models.IntegerField(default=0)
+
 class Answers(models.Model):
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.OneToOneField(QuestionInstance, on_delete=models.SET_NULL, null=True, blank=False)
+    user_id = models.IntegerField(default=0)
     answer_option = models.IntegerField(default=1)
 
     ANSWER_WEIGHT = (
@@ -57,15 +63,8 @@ class Answers(models.Model):
     answer_weight = models.CharField(max_length=3, choices=ANSWER_WEIGHT, blank=False, default="1",
                                         help_text='Answer Weighting')
 
-    class Meta:
-        unique_together = (('created_by', 'question'))
-
-    def get_random_question(self):
-        #print("User_id: {}".format(User.get_username()))
-        #object_list = list(AnsweFshrs.obsjects.exclude().values()[:1])
-        object_list = list(Answers.objects.filter().values())
-        shuffle(object_list)
-        return object_list[:1]
+   # class Meta:
+        #unique_together = (('created_by', 'question'))
 
     def __str__(self):
         return "User: %s Question: %s" % (self.created_by, self.question)
@@ -77,7 +76,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length = 500, blank=True)
     location = models.CharField(max_length=30, blank=True)
-    birth_date = models.DateField(null=True, blank=True)
+    birthdate = models.DateField(null=True, blank=True)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

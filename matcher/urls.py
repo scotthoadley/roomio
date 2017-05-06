@@ -21,6 +21,10 @@ urlpatterns += [
 ]
 urlpatterns += [
     url(r'^create/answers/$', views.AnswerView.as_view(), name='answer_view'),
+    url(r'^create/question/$', views.QuestionInstanceView.as_view(), name='question_view'),
     #url(r'^answers/(?P<pk>\d+)/update/$', views.AuthorUpdate.as_view(), name='author_update'),
     #url(r'^answers/(?P<pk>\d+)/delete/$', views.AuthorDelete.as_view(), name='author_delete'),
+]
+urlpatterns += [
+    url(r'^profile/edit/$', views.update_profile, name='profile_edit'),
 ]

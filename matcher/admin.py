@@ -11,24 +11,24 @@ from .models import QuestionInstance, Answers
 
 @admin.register(QuestionInstance)
 class QuestionInstanceAdmin(admin.ModelAdmin):
-    list_display = ('question_id', 'question_text', 'vetted', 'question_option_1', 'question_option_2', 'question_option_3', 'question_option_4')
-    list_filter = ('question_id', 'question_text', 'vetted')
+    list_display = ('question_text', 'vetted', 'question_option_1', 'question_option_2')
+    list_filter = ('question_text', 'vetted', 'question_option_1', 'question_option_2')
    # list_editable = ('question_id', 'question_text', 'vetted')
     fieldsets = (
         (None, {
-            'fields': ('question_text', 'vetted',  'question_option_1', 'question_option_2', 'question_option_3', 'question_option_4')
+            'fields': ('question_text', 'vetted',  'question_option_1', 'question_option_2')
         }),
     )
 
 @admin.register(Answers)
 class AnswersAdmin(admin.ModelAdmin):
-    list_display = ('created_by', 'question', 'answer_weight', 'answer_option')
-    list_filter = ('created_by', 'question', 'answer_weight', 'answer_option')
+    list_display = ('question', 'answer_weight', 'answer_option')
+    list_filter = ('question', 'answer_weight', 'answer_option')
     #list_editable = ('user', 'question', 'answer_weight')
 
 
     fieldsets = (
         (None, {
-            'fields': ('created_by', 'question', 'answer_weight', 'answer_option')
+            'fields': ('question', 'answer_weight', 'answer_option')
         }),
     )

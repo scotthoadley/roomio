@@ -6,7 +6,10 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.db.models.query import QuerySet
 from django.views.generic.edit import FormView
-from .forms import AnswerForm
+from .forms import AnswerForm, ProfileForm, UserForm
+from django.contrib import messages
+from django.shortcuts import redirect
+
 
 def index(request):
     """
@@ -21,13 +24,6 @@ def index(request):
         context={'num_questions': num_questions},
     )
 
-
-# class BookListView(generic.ListView):
-#     model = Book
-#     context_object_name = 'my_book_list'   # your own name for the list as a template variable
-#     queryset = Book.objects.filter(title__icontains='war')[:5] # Get 5 books containing the title war
-#     template_name = 'books/my_arbitrary_template_name_list.html'  # Specify your own template name/locati
-#
 class QuestionListView(LoginRequiredMixin, generic.ListView):
     model = QuestionInstance
     template_name = "questioninstance_list.html"
@@ -47,22 +43,49 @@ class UserAnswersListView(LoginRequiredMixin, generic.ListView):
     #def get_queryset(self):
         #return Answers.objects.filter(created_by=self.request.user_id)
 
-# class AnswerView(generic.FormView):
-#     template_name = 'answers_form.html'
-#     form_class = AnswerForm
-#     success_url = reverse_lazy('myanswers')
+class AnswerView(generic.FormView):
+    template_name = 'answers_form.html'
+    form_class = AnswerForm
+    success_url = reverse_lazy('myanswers')
+
+    def form_valid(self, form):
+        #form.instance.created_by = self.request.user
+        form.save(commit=False)
+        return super(AnswerView, self).form_valid(form)
+
+# class AnswerView(CreateView):
+#     model = Answers
+#     fields = ['question', 'answer_option', 'answer_weight']
 #
 #     def form_valid(self, form):
-#         #form.instance.created_by = self.request.user
-#         answer=form.save(commit=False)
-#         answer.
+#         form.instance.created_by = self.request.user
 #         return super(AnswerView, self).form_valid(form)
+#         #success_url = reverse_lazy('my-answers')
 
-class AnswerView(CreateView):
-    model = Answers
-    fields = ['question', 'answer_option', 'answer_weight']
+class QuestionInstanceView(CreateView):
+    model = QuestionInstance
+    fields = ['question_text', 'question_option_1', 'question_option_2', 'question_option_3', 'question_option_4']
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        return super(AnswerView, self).form_valid(form)
+        return super(QuestionInstanceView, self).form_valid(form)
         #success_url = reverse_lazy('my-answers')
+
+def update_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, ('Your profile was successfully updated!'))
+            return redirect('settings:profile')
+        else:
+            messages.error(request, ('Please correct the error below.'))
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    return render(request, 'profiles/profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
