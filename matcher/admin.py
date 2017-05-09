@@ -22,13 +22,13 @@ class QuestionInstanceAdmin(admin.ModelAdmin):
 
 @admin.register(Answers)
 class AnswersAdmin(admin.ModelAdmin):
-    list_display = ('question', 'answer_weight', 'answer_option')
-    list_filter = ('question', 'answer_weight', 'answer_option')
+    list_display = ('question', 'user', 'answer_ideal', 'answer_option', 'answer_weight')
+    list_filter = ('question', 'user', 'answer_ideal', 'answer_option', 'answer_weight')
     #list_editable = ('user', 'question', 'answer_weight')
 
 
     fieldsets = (
         (None, {
-            'fields': ('question', 'answer_weight', 'answer_option')
+            'fields': ('question', 'user')
         }),
     )

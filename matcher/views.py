@@ -9,7 +9,7 @@ from django.views.generic.edit import FormView
 from .forms import AnswerForm, ProfileForm, UserForm
 from django.contrib import messages
 from django.shortcuts import redirect
-
+from django.contrib.auth.models import User
 
 def index(request):
     """
@@ -25,8 +25,16 @@ def index(request):
     )
 
 class QuestionListView(LoginRequiredMixin, generic.ListView):
-    model = QuestionInstance
+    model = QuestionInstance.objects.filter(vetted__exact=True)
     template_name = "questioninstance_list.html"
+
+def QuestionList(request):
+    model = QuestionInstance.objects.filter(vetted__exact=True)
+    return render(
+        request,
+        'questioninstance_list.html',
+        context={'questioninstance_list': model}
+    )
 
 class QuestionDetailView(LoginRequiredMixin, generic.DetailView):
     model = QuestionInstance
@@ -40,36 +48,49 @@ class UserAnswersListView(LoginRequiredMixin, generic.ListView):
     template_name = 'useranswer_list.html'
     paginate_by = 10
 
-    #def get_queryset(self):
-        #return Answers.objects.filter(created_by=self.request.user_id)
+    def get_queryset(self):
+        return Answers.objects.filter(user=self.request.user.id)
 
-class AnswerView(generic.FormView):
+def answer_question(request):
+    if request.method == "POST":
+        form = AnswerForm(request.POST)
+        form.user = request.user
+        print("User: {}".format(request.user))
+        if form.is_valid():
+            print("Success: {}".format(form))
+            form.save()
+    else:
+        form = AnswerForm()
+    return render(request, 'answers_form.html', {'form': AnswerForm()})
+
+class AnswerInstanceView(CreateView):
     template_name = 'answers_form.html'
-    form_class = AnswerForm
+    #form_class = AnswerForm
     success_url = reverse_lazy('myanswers')
 
-    def form_valid(self, form):
-        #form.instance.created_by = self.request.user
-        form.save(commit=False)
-        return super(AnswerView, self).form_valid(form)
+    model = Answers
+    fields = ['question', 'answer_option', 'answer_ideal', 'answer_weight']
 
-# class AnswerView(CreateView):
-#     model = Answers
-#     fields = ['question', 'answer_option', 'answer_weight']
-#
-#     def form_valid(self, form):
-#         form.instance.created_by = self.request.user
-#         return super(AnswerView, self).form_valid(form)
-#         #success_url = reverse_lazy('my-answers')
+    def get_initial(self):
+        super(AnswerInstanceView, self).get_initial()
+        question = QuestionInstance.get_random_question(QuestionInstance)
+        self.initial = {"question": question}
+        return self.initial
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        #form.save()
+        #success_url = reverse_lazy('myanswers')
+        return super(AnswerInstanceView, self).form_valid(form)
 
 class QuestionInstanceView(CreateView):
     model = QuestionInstance
-    fields = ['question_text', 'question_option_1', 'question_option_2', 'question_option_3', 'question_option_4']
+    fields = ['question_text', 'question_option_1', 'question_option_2']
+    success_url = reverse_lazy('questions')
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        form.instance.submitted_user = self.request.user
         return super(QuestionInstanceView, self).form_valid(form)
-        #success_url = reverse_lazy('my-answers')
 
 def update_profile(request):
     if request.method == 'POST':
@@ -89,3 +110,10 @@ def update_profile(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
+
+def get_answer(request):
+    if request.method == 'POST':
+        form = AnswerForm
+
+        if form.is_valiid():
+            print("Success")

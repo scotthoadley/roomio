@@ -1,12 +1,17 @@
 from django import forms
 from .models import Answers, QuestionInstance, Profile, User
 
-class AnswerForm(forms.Form):
-    question = QuestionInstance.get_random_question(QuestionInstance)
-    #question = QuestionInstance.objects.get(pk=id)
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
+from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
+from bootstrap3 import *
 
-    def add_answer(self):
-        pass
+class AnswerForm(forms.ModelForm):
+    question = QuestionInstance.get_random_question(QuestionInstance)
+    #answer_weight = forms.CharField()
+    class Meta:
+         model = Answers
+         fields = ('question', 'answer_option', 'answer_weight', 'answer_ideal')
 
 class UserForm(forms.ModelForm):
     class Meta:
