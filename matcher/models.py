@@ -33,9 +33,18 @@ class QuestionInstance(models.Model):
         return "matcher/%i/" % self.question_id
 
 class Matches(models.Model):
-    user_one = models.IntegerField(default=0)
-    user_two = models.IntegerField(default=0)
-    match_percent = models.IntegerField(default=0)
+    question = models.ForeignKey(QuestionInstance, on_delete=models.SET_NULL, null=True, blank=False, related_name='question')
+    user_one = models.ForeignKey(User, null=True, related_name='user_one')
+    user_two = models.ForeignKey(User, null=True, related_name='user_two')
+    importance_one = models.IntegerField(default=0)
+    importance_two = models.IntegerField(default=0)
+    total_one = models.IntegerField(default=0)
+    total_two = models.IntegerField(default=0)
+
+class TrueMatch(models.Model):
+    user_onet = models.ForeignKey(User, null=True, related_name='user_onet')
+    user_twot = models.ForeignKey(User, null=True, related_name='user_twot')
+    match_percent = models.FloatField(default=0)
 
 class Answers(models.Model):
     question = models.ForeignKey(QuestionInstance, on_delete=models.SET_NULL, null=True, blank=False)

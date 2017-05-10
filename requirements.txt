@@ -1,0 +1,10 @@
+appdirs==1.4.3
+Django==1.11
+django-annoying==0.10.3
+django-bootstrap3==8.2.2
+django-crispy-forms==1.6.1
+numpy==1.12.1
+packaging==16.8
+pyparsing==2.2.0
+pytz==2017.2
+six==1.10.0
