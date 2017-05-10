@@ -46,6 +46,11 @@ class TrueMatch(models.Model):
     user_twot = models.ForeignKey(User, null=True, related_name='user_twot')
     match_percent = models.FloatField(default=0)
 
+class Messages(models.Model):
+    to_user = models.ForeignKey(User, null=True, related_name='to_user')
+    from_user = models.ForeignKey(User, null=True, related_name='from_user')
+    message = models.TextField(max_length = 500, blank=True)
+
 class Answers(models.Model):
     question = models.ForeignKey(QuestionInstance, on_delete=models.SET_NULL, null=True, blank=False)
     #just replace  with question_id
@@ -68,7 +73,7 @@ class Answers(models.Model):
     )
 
     answer_weight = models.CharField(max_length=3, choices=ANSWER_WEIGHT, blank=False, default="1",
-    help_text='Answer Weighting')
+    help_text='How important is this question to you?')
 
    # class Meta:
         #unique_together = (('created_by', 'question'))

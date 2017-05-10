@@ -1,0 +1,19 @@
+
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<form method="post">
+  {% csrf_token %}
+    {% bootstrap_form form %}
+{#  {{ user_form.as_p }}#}
+{#  {{ profile_form.as_p }}#}
+  <button class="btn active" type="submit">Register</button>
+</form>

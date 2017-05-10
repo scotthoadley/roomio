@@ -30,3 +30,7 @@ urlpatterns = [
 urlpatterns += [
     url(r'^accounts/', include('django.contrib.auth.urls')),
 ]
+
+urlpatterns +=[
+    url(r'^messages/', include('postman.urls', namespace='postman', app_name='postman')),
+]

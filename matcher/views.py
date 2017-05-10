@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
-from .models import QuestionInstance, Answers, TrueMatch, Profile
+from .models import QuestionInstance, Answers, TrueMatch, Profile, User, Messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -10,7 +10,19 @@ from .forms import AnswerForm, ProfileForm, UserForm
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate
 from django.db.models import Q
+
+class ExtraContextMixin(object):
+
+    def get_context_data(self, **kwargs):
+        context = super(ExtraContextMixin, self).get_context_data(**kwargs)
+        context.update(self.extra())
+        return context
+
+    def extra(self):
+        return dict()
 
 def index(request):
     """
@@ -26,11 +38,11 @@ def index(request):
     )
 
 class QuestionListView(LoginRequiredMixin, generic.ListView):
-    model = QuestionInstance.objects.filter(vetted__exact=True)
+    model = QuestionInstance.objects.all()
     template_name = "questioninstance_list.html"
 
 def QuestionList(request):
-    model = QuestionInstance.objects.filter(vetted__exact=True)
+    model = QuestionInstance.objects.all()
     return render(
         request,
         'questioninstance_list.html',
@@ -40,6 +52,14 @@ def QuestionList(request):
 class QuestionDetailView(LoginRequiredMixin, generic.DetailView):
     model = QuestionInstance
     template_name = "questioninstance_detail.html"
+
+class UserDetailView(LoginRequiredMixin, ExtraContextMixin, generic.DetailView):
+    model = User
+    template_name = "profiles/view_profile.html"
+
+    def extra(self):
+        extra = Profile.objects.all()
+        return dict(extra = extra)
 
 class TrueMatchListView(LoginRequiredMixin, generic.ListView):
     model = TrueMatch
@@ -110,7 +130,7 @@ def update_profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request, ('Your profile was successfully updated!'))
-            return redirect('myprofiles')
+            return redirect('myprofile')
         else:
             messages.error(request, ('Please correct the error below.'))
     else:
@@ -121,10 +141,29 @@ def update_profile(request):
         'profile_form': profile_form
     })
 
+class RegisterView(CreateView):
+    model = User
+    fields = ['username', 'first_name', 'last_name', 'email', 'password']
+    success_url = reverse_lazy('index')
+
+def register_profile(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('index')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
+
 def view_my_profile(request):
     return render(request, 'profiles/myprofile.html', {
         'user': request.user,
-        'profile:': Profile.objects.get(user=request.user)
+        'profile:': request.user.profile
     })
 
 def get_answer(request):

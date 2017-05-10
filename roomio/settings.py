@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'bootstrap3',
     'matcher.apps.MatcherConfig',
-    'crispy_forms'
+    'crispy_forms',
+    'postman'
 ]
 
 MIDDLEWARE = [

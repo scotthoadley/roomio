@@ -13,30 +13,32 @@
 </head>
 
 <body>
-<nav class="navbar navbar-fixed-top navbar-light" style="background-color: #e3f2fd;">
+<nav class="navbar navbar-fixed-top navbar-light bg-info text-white">
       <div class="container">
-        <div class="navbar-header">
+        <div class="navbar-header text-white">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{% url 'index' %}">Room.io</a>
+          <a class="navbar-brand text-white" href="{% url 'index' %}">Room.io</a>
         </div>
-      <div id="navbar" class="navbar-collapse collapse">
+      <div id="navbar" class="navbar-collapse collapse text-white">
           {% if user.is_authenticated %}
               <li class="btn btn-lg dropdown navbar-form navbar-right">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.first_name }} {{ user.last_name }} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
+                    <li><a href="{% url 'mymatches' %}">My Matches</a></li>
                     <li><a href="{% url 'questions' %}">All Questions</a></li>
                   <li><a href="{% url 'myanswers' %}">My Answers</a></li>
                   <li><a href="{% url 'answer_view' %}">Answer Questions</a></li>
                   <li><a href="{% url 'question_view' %}">Submit Questions</a></li>
                   <li role="separator" class="divider"></li>
                   <li class="dropdown-header">Account</li>
-                  <li><a href="#">Settings</a></li>
-                  <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+                  <li><a href="{% url 'myprofile' %}">My Profile</a></li>
+                  <li><a href="{% url 'profile_edit' %}">Settings</a></li>
+                  <li><a href="{% url 'logout'%}">Logout</a></li>
                 </ul>
               </li>
           {% else %}
@@ -66,19 +68,38 @@
           {% block sidebar %}
           <ul class="sidebar-nav">
               <li><a href="{% url 'index' %}">Home</a></li>
-              <li><a href="{% url 'questions' %}">All Questions</a></li>
+
               <p/>
              {% if user.is_authenticated %}
-             <li>User: {{ user.get_username }}</li>
-             <li><a href="{% url 'myanswers' %}">My Answers</a></li>
-             <li><a href="{% url 'answer_view' %}">Answer Questions</a></li>
-                 <li><a href="{% url 'question_view' %}">Submit Questions</a></li>
-             <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+                    <li class="h4">Matching</li>
+                    <li><a href="{% url 'mymatches' %}">My Matches</a></li>
+                    <li><a href="{% url 'questions' %}">All Questions</a></li>
+                  <li><a href="{% url 'myanswers' %}">My Answers</a></li>
+                  <li><a href="{% url 'answer_view' %}">Answer Questions</a></li>
+                  <li><a href="{% url 'question_view' %}">Submit Questions</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li class="h4">Account</li>
+                  <li><a href="{% url 'myprofile' %}">My Profile</a></li>
+                  <li><a href="{% url 'profile_edit' %}">Settings</a></li>
+
+                 {% block postman_menu %}
+ <li class="h4">Messaging</li>
+ <li><a href="{% url 'postman:inbox' %}">Inbox</a></li>
+ <li><a href="{% url 'postman:sent' %}">Sent Messages</a></li>
+ <li><a href="{% url 'postman:write' %}">Compose</a></li>
+ <li><a href="{% url 'postman:archives' %}">Archives</a></li>
+ <li><a href="{% url 'postman:trash' %}">Trash</a></li>
+{% endblock %}
+                 <p></p>
+             <li><a href="{% url 'logout'%}">Logout</a></li>
+
                {% else %}
                  <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
                {% endif %}
           </ul>
          {% endblock %}
+
+
           </div>
           <div class="col-sm-10 ">
           {% block content %}{% endblock %}
@@ -91,9 +112,11 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <h1>Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+        <h1>Welcome to Room.io!</h1>
+        <p>Room.io is a unique way to find your next roomate. By relying on our users to
+        submit and answer the questions <i>they</i> think are most important in a roomate,
+        allowing us to match them using an algorithm.</p>
+        <p><a class="btn btn-primary btn-lg" href="{% url 'register_profile' %}" role="button">Sign up &raquo;</a></p>
       </div>
     </div>
 
@@ -101,17 +124,17 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
-          <h2>Heading</h2>
+          <h2>Info</h2>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
-          <h2>Heading</h2>
+          <h2>Why?</h2>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
        </div>
         <div class="col-md-4">
-          <h2>Heading</h2>
+          <h2>Algorithm</h2>
           <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>

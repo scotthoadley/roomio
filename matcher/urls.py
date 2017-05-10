@@ -31,5 +31,7 @@ urlpatterns += [
 ]
 urlpatterns += [
     url(r'^profile/edit/$', views.update_profile, name='profile_edit'),
-    url(r'^profile/myprofile/$', views.view_my_profile, name='myprofiles'),
+    url(r'^profile/myprofile/$', views.view_my_profile, name='myprofile'),
+    url(r'^profile/view_profile/(?P<pk>\d+)$', views.UserDetailView.as_view(), name='view_profile'),
+    url(r'^register/$', views.register_profile, name='register_profile'),
 ]

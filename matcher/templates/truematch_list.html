@@ -1,19 +1,21 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>Match List</h1>
+    <h1>Ranking List</h1>
 
     {% if truematch_list %}
-    <ul>
 
+<ul class="list-group">
       {% for truematch in truematch_list %}
-      <li>
-{#        <a href="../question/{{question.id }}">{{ question.question_text }}</a> ({{question.vetted}})#}
-        {{ truematch.user_onet }} With: {{ truematch.user_twot }} Ranking {{ truematch.match_percent }}
-      </li>
-      {% endfor %}
 
-    </ul>
+{#        <a href="../question/{{question.id }}">{{ question.question_text }}</a> ({{question.vetted}})#}
+        <li class="list-group-item"><a href="../profile/view_profile/{{truematch.user_onet.id }}">{{ truematch.user_onet }}
+        </a>
+          With:  <a href="../profile/view_profile/{{truematch.user_twot.id }}">{{ truematch.user_twot }}
+            </a> Ranking: {{ truematch.match_percent }} <a href="{% url 'postman:write' truematch.user_twot.username %}">Write Message</a></li>
+
+      {% endfor %}
+</ul>
     {% else %}
       <p>There are no questions in the database.</p>
     {% endif %}       

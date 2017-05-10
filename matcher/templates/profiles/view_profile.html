@@ -11,15 +11,11 @@
 {% bootstrap_messages %}
 
 {% block content %}
-    <h2>My Profile</h2>
-  Username: {{ user.username }}
-    <br/>
+    <h2>{{ user.username }}</h2>
   Name: {{ user.first_name }} {{ user.last_name }}
     <br/>
   E-mail: {{ user.email }}
     <br/>
-  Profile: {{ profile.bio }}
-    <br/>
-  {{ profile.location }}
+  Bio: {{ profile.bio }}
 
 {% endblock %}
