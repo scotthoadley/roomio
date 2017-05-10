@@ -11,12 +11,13 @@
 {% bootstrap_messages %}
 
 {% block content %}
-<form method="post">
-  {% csrf_token %}
-    {% bootstrap_form user_form %}
-    {% bootstrap_form profile_form %}
-{#  {{ user_form.as_p }}#}
-{#  {{ profile_form.as_p }}#}
-  <button type="submit">Save changes</button>
-</form>
+    <h2>My Profile</h2>
+  Username: {{ user.username }}
+    <br/>
+  {{ user.first_name }} {{ user.last_name }}
+    <br/>
+  {{ user.email }}
+    <br/>
+  {{ profile.as_p }}
+
 {% endblock %}

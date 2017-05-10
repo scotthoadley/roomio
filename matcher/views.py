@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
-from .models import QuestionInstance, Answers
+from .models import QuestionInstance, Answers, TrueMatch, Profile
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -10,6 +10,7 @@ from .forms import AnswerForm, ProfileForm, UserForm
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 def index(request):
     """
@@ -39,6 +40,15 @@ def QuestionList(request):
 class QuestionDetailView(LoginRequiredMixin, generic.DetailView):
     model = QuestionInstance
     template_name = "questioninstance_detail.html"
+
+class TrueMatchListView(LoginRequiredMixin, generic.ListView):
+    model = TrueMatch
+    template_name = 'truematch_list.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return TrueMatch.objects.filter(Q(user_onet=self.request.user.id) |
+                                      Q(user_twot=self.request.user.id))
 
 class UserAnswersListView(LoginRequiredMixin, generic.ListView):
     """
@@ -100,7 +110,7 @@ def update_profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request, ('Your profile was successfully updated!'))
-            return redirect('settings:profile')
+            return redirect('myprofiles')
         else:
             messages.error(request, ('Please correct the error below.'))
     else:
@@ -109,6 +119,12 @@ def update_profile(request):
     return render(request, 'profiles/profile.html', {
         'user_form': user_form,
         'profile_form': profile_form
+    })
+
+def view_my_profile(request):
+    return render(request, 'profiles/myprofile.html', {
+        'user': request.user,
+        'profile:': Profile.objects.get(user=request.user)
     })
 
 def get_answer(request):

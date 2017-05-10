@@ -118,12 +118,21 @@ class Command(BaseCommand):
         match_percent = 0
         importance_one = 0
         importance_two = 0
-        total_one = 0
-        total_two = 0
+        total_one = 1
+        total_two = 1
         percent_one = 0
         percent_two = 0
-
+        first_run = True
+        last = len(Matches.objects.all())
+        count = 0
+        print("LENGTH: {}".format(last))
         for match in matcher:
+            count += 1
+            print("Count: {}".format(count))
+            if first_run:
+                match_user_one = match.user_one
+                match_user_two = match.user_two
+                first_run = False
             importance_one += match.importance_one
             importance_two += match.importance_two
             total_one += match.total_one
@@ -133,28 +142,36 @@ class Command(BaseCommand):
             if match_user_one != match.user_one or match_user_two != match.user_two:
                 percent_one = importance_one/total_one
                 percent_two = importance_two/total_two
-                match_percent = math.sqrt(percent_one*percent_two)
+                match_percent = math.sqrt(percent_one*percent_two)*100
                 print("----Total Between {} and {}: {}".format(
                     match_user_one, match_user_two, match_percent
                 ))
-                tm = TrueMatch(user_onet = User(match_user_one), user_twot = User(match_user_two), match_percent = match_percent)
+
+                real_user1 = User.objects.get(username=match_user_one)
+                real_user2 = User.objects.get(username=match_user_two)
+
+               # print("REAL USER----", real_user1)
+                tm = TrueMatch(user_onet = real_user1, user_twot = real_user2, match_percent = match_percent)
                 tm.save()
                 print("----NEW USER----")
-                importance_one = 0
-                importance_two = 0
-                total_one = 0
-                total_two = 0
-                percent_one = 0
-                percent_two = 0
+                if count != last-1:
+                    print("C: {} L: {}".format(count, last))
+                    importance_one = 0
+                    importance_two = 0
+                    total_one = 1
+                    total_two = 1
+                    percent_one = 0
+                    percent_two = 0
             print(match.user_one, match.user_two, match.total_one, match.total_two)
                 #print(match.user_one, match.user_two, match.total)
 
             match_user_one = match.user_one
             match_user_two = match.user_two
+            print("MU1: {} MU2: {}".format(match.user_one, match.user_two))
 
         percent_one = importance_one / total_one
         percent_two = importance_two / total_two
-        match_percent = math.sqrt(percent_one * percent_two)
+        match_percent = math.sqrt(percent_one * percent_two)*100
         print("----Total Between {} and {}: {}".format(
          match_user_one, match_user_two, match_percent
         ))

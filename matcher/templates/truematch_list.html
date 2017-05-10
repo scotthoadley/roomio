@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Match List</h1>
+
+    {% if truematch_list %}
+    <ul>
+
+      {% for truematch in truematch_list %}
+      <li>
+{#        <a href="../question/{{question.id }}">{{ question.question_text }}</a> ({{question.vetted}})#}
+        {{ truematch.user_onet }} With: {{ truematch.user_twot }} Ranking {{ truematch.match_percent }}
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>There are no questions in the database.</p>
+    {% endif %}       
+{% endblock %}  

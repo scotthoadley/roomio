@@ -21,6 +21,9 @@ urlpatterns += [
     url(r'^myanswers/$', views.UserAnswersListView.as_view(), name='myanswers'),
 ]
 urlpatterns += [
+    url(r'^mymatches/$', views.TrueMatchListView.as_view(), name='mymatches'),
+]
+urlpatterns += [
     url(r'^create/answers/$', views.AnswerInstanceView.as_view(), name='answer_view'),
     url(r'^create/question/$', views.QuestionInstanceView.as_view(), name='question_view'),
     #url(r'^answers/(?P<pk>\d+)/update/$', views.AuthorUpdate.as_view(), name='author_update'),
@@ -28,4 +31,5 @@ urlpatterns += [
 ]
 urlpatterns += [
     url(r'^profile/edit/$', views.update_profile, name='profile_edit'),
+    url(r'^profile/myprofile/$', views.view_my_profile, name='myprofiles'),
 ]

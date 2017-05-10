@@ -51,8 +51,14 @@ class Answers(models.Model):
     #just replace  with question_id
     #question = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    answer_option = models.IntegerField(default=1)
-    answer_ideal = models.IntegerField(default=1)
+
+    ANSWER_CHOICES = (
+      (1, 'Yes'),
+     (0, 'No'),
+    )
+
+    answer_option = models.IntegerField(default=1, choices=ANSWER_CHOICES)
+    answer_ideal = models.IntegerField(default=1, choices=ANSWER_CHOICES)
 
     ANSWER_WEIGHT = (
       ('0', 'Irrelevant'),
